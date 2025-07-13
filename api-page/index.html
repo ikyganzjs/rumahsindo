@@ -55,16 +55,43 @@
       object-fit: cover;
       border-radius: 12px;
     }
-    #wm {
-      text-align: center;
-      color: rgba(0, 0, 0, 0.6);
-      font-weight: 500;
-      font-size: 15px;
-      margin-top: 20px;
+    #loginOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(5px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   </style>
 </head>
 <body>
+  <!-- Login Form Overlay -->
+  <div id="loginOverlay">
+    <div class="card p-4 shadow" style="min-width: 320px; max-width: 400px;">
+      <h4 class="mb-3 text-center">Login</h4>
+      <form id="loginForm">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" id="username" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" id="email" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" id="password" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+        <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-outline-success w-100 mt-2">Daftar via WhatsApp</a>
+      </form>
+    </div>
+  </div>
+
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
@@ -227,6 +254,40 @@
         document.getElementById("profileImage").src = 'https://img1.pixhost.to/images/7013/619067548_zakkistore.jpg';
       });
   });
+
+  const loginForm = document.getElementById("loginForm");
+  const loginOverlay = document.getElementById("loginOverlay");
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const repoURL = `https://api.github.com/repos/username/reponame/contents/database.json`; // Ganti dengan milikmu
+
+    try {
+      const res = await fetch(repoURL);
+      const data = await res.json();
+      const content = atob(data.content);
+      const users = JSON.parse(content);
+
+      const found = users.find(user =>
+        user.username === username && user.email === email && user.password === password
+      );
+
+      if (found) {
+        alert("Login berhasil!");
+        loginOverlay.style.display = "none";
+      } else {
+        alert("Login gagal. Coba lagi.");
+      }
+    } catch (err) {
+      alert("Gagal mengakses database.");
+      console.error(err);
+    }
+  });
+});
 </script>
 
   <!-- Script Utama -->
