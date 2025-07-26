@@ -94,6 +94,17 @@
       </a>
     </div>
   </nav>
+  
+  <!-- Sidebar -->
+<div id="sidebar" class="position-fixed top-0 end-0 vh-100 bg-white shadow-lg px-3 py-4 overflow-auto" style="width: 300px; display: none; z-index: 1050;">
+  <h5 class="mb-3">📘 Dokumentasi API</h5>
+  <div id="sidebarContent"></div>
+</div>
+
+<!-- Toggle Button (garis 3) -->
+<button id="toggleSidebar" class="btn btn-outline-dark position-fixed top-0 end-0 m-3" style="z-index: 1100;">
+  <span class="navbar-toggler-icon"></span>
+</button>
 
   <!-- Main -->
   <div class="container">
@@ -116,12 +127,7 @@
         </ul>
       </div>
     </div>
-
-    <input type="text" id="searchInput" class="form-control mb-4" placeholder="Search API...">
-    <div id="apiLinks" class="mb-4"></div>
-    <div class="tab-content" id="apiContent"></div>
-  </div>
-
+    
   <!-- Modal -->
   <div class="modal fade" id="apiResponseModal" tabindex="-1" aria-labelledby="apiResponseModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
