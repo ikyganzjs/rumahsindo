@@ -8,6 +8,21 @@ body.no-scroll {
     overflow: hidden;
 }
 
+#toggleSidebar {
+  border: none;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(5px);
+  border-radius: 8px;
+}
+
+#sidebar a {
+  display: block;
+  margin-bottom: 10px;
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 500;
+}
+
 .navbar {
     background-color: white;
     padding: 10px 10px;
@@ -69,16 +84,6 @@ animation: op 0.8s infinite alternate;
 .modal-body {
     max-height: 60vh;
     overflow-y: auto;
-}
-
-#apiQueryInputContainer input, #searchInput {
-    transition: outline 0.3s ease;
-}
-
-#apiQueryInputContainer input:focus, #searchInput:focus {
-    outline: 3px solid #333 !important;
-    border: none;
-    box-shadow: none;
 }
 
 #apiResponseContent, #apiEndpoint {
