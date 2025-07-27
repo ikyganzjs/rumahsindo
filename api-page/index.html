@@ -1,4 +1,4 @@
-<!-- Final HTML Gabungan Login + Layout API -->
+<!-- Final HTML Gabungan Login + Layout API + Loading Screen Premium -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,31 +19,88 @@
       padding: 0;
     }
     .no-scroll { overflow: hidden; }
+
+    /* ✅ Loading Screen Premium */
     #loadingScreen {
       position: fixed;
       inset: 0;
-      background: white;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
       text-align: center;
-      transition: opacity 5s ease;
+      transition: opacity 1.5s ease;
+      color: #fff;
     }
     .fade-out { opacity: 0; pointer-events: none; }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      animation: fadeRotate 4s infinite linear;
+      margin-bottom: 20px;
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #loadingText {
+      font-size: 24px;
+      margin-bottom: 20px;
+      animation: pulse 1.5s infinite;
+    }
+
     .progress {
-      width: 200px;
-      height: 8px;
+      width: 220px;
+      height: 10px;
       border-radius: 50px;
       overflow: hidden;
       margin-top: 10px;
-      background-color: #eee;
+      background-color: rgba(255, 255, 255, 0.2);
+      position: relative;
     }
     .progress-bar {
       height: 100%;
-      background: #0d6efd;
+      width: 0%;
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      position: relative;
+      transition: width 0.3s ease;
     }
+    .progress-bar::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 50px;
+      background: rgba(255,255,255,0.4);
+      transform: translateX(-50px);
+      animation: shimmer 1.2s infinite;
+    }
+
+    @keyframes fadeRotate {
+      0% { transform: rotate(0deg); opacity: 1; }
+      50% { transform: rotate(180deg); opacity: 0.8; }
+      100% { transform: rotate(360deg); opacity: 1; }
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-50px); }
+      100% { transform: translateX(300px); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* ✅ Container Login & API Layout */
     .container {
       background-color: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(5px);
@@ -62,18 +119,23 @@
 
 <!-- Popup Pengumuman -->
 <div id="announcementBar" class="alert alert-info text-center mb-0" role="alert" style="position: fixed; top: 0; left: 0; right: 0; z-index: 10000; border-radius: 0;">
-  <strong>📢 Pengumuman:</strong> Website sedang dalam perbaikan.
+  <strong>Pengumuman:</strong> Website sedang dalam perbaikan.
   <button type="button" class="btn-close ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
 <body>
+  <!-- ✅ Loading Screen dengan Logo -->
   <div id="loadingScreen">
+    <div class="logo">
+      <img src="https://img1.pixhost.to/images/7013/619060458_zakkistore.jpg" alt="Logo">
+    </div>
     <h2 id="loadingText">Loading... 0%</h2>
     <div class="progress">
       <div class="progress-bar" id="loadingBar"></div>
     </div>
   </div>
 
+  <!-- ✅ Login -->
   <div class="container" id="loginContainer">
     <h2 class="text-center mb-4">Login ke IkyJs API</h2>
     <form id="loginForm">
@@ -92,6 +154,7 @@
     </p>
   </div>
 
+  <!-- ✅ Main Content -->
   <div id="mainContent" style="display: none;">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light">
