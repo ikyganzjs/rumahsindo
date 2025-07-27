@@ -1,3 +1,4 @@
+<!-- Final HTML Gabungan Login + Layout API -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +29,7 @@
       justify-content: center;
       flex-direction: column;
       text-align: center;
-      transition: opacity 3s ease;
+      transition: opacity 5s ease;
     }
     .fade-out { opacity: 0; pointer-events: none; }
     .progress {
@@ -58,6 +59,13 @@
     }
   </style>
 </head>
+
+<!-- Popup Pengumuman -->
+<div id="announcementBar" class="alert alert-info text-center mb-0" role="alert" style="position: fixed; top: 0; left: 0; right: 0; z-index: 10000; border-radius: 0;">
+  <strong>📢 Pengumuman:</strong> Website sedang dalam perbaikan.
+  <button type="button" class="btn-close ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
 <body>
   <div id="loadingScreen">
     <h2 id="loadingText">Loading... 0%</h2>
