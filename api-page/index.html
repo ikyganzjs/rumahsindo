@@ -373,7 +373,7 @@ const registerForm = document.getElementById("registerForm");
     msg.style.color = "white";
 
     try {
-      const response = await fetch("/api/register", {
+      const response = await fetch("/api/register.js", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
