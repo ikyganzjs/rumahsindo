@@ -372,32 +372,78 @@ const registerForm = document.getElementById("registerForm");
     msg.textContent = "Memproses...";
     msg.style.color = "white";
 
+    const token = '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'; // Jangan disimpan di HTML sebenarnya
+    const owner = 'ikyganzjs';
+    const repo = 'mangeakdatabase';
+    const path = 'vercel.json';
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
     try {
-      const response = await fetch("/register.js", {
-        method: "POST",
+      // Ambil file vercel.json
+      const getFile = await fetch(apiUrl, {
         headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, email, password })
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github.v3+json'
+        }
       });
 
-      const result = await response.json();
-      msg.textContent = result.message;
+      const fileData = await getFile.json();
 
-      if (response.ok) {
-        msg.style.color = "lightgreen";
-        registerForm.reset();
-        setTimeout(() => {
-          toggleForms();
-          msg.textContent = "";
-        }, 1500);
-      } else {
-        msg.style.color = "orange";
+      if (!getFile.ok) {
+        msg.textContent = "Gagal mengambil file dari GitHub.";
+        msg.style.color = "red";
+        console.error(fileData);
+        return;
       }
+
+      const sha = fileData.sha;
+      const content = atob(fileData.content);
+      const users = JSON.parse(content);
+
+      if (users.find(u => u.username === username)) {
+        msg.textContent = "Username sudah terdaftar!";
+        msg.style.color = "orange";
+        return;
+      }
+
+      users.push({ username, email, password });
+
+      const updatedContent = btoa(JSON.stringify(users, null, 2));
+
+      const update = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github.v3+json"
+        },
+        body: JSON.stringify({
+          message: `Add user ${username}`,
+          content: updatedContent,
+          sha
+        })
+      });
+
+      const updateResult = await update.json();
+
+      if (!update.ok) {
+        msg.textContent = "Gagal menyimpan ke GitHub.";
+        msg.style.color = "red";
+        console.error(updateResult);
+        return;
+      }
+
+      msg.textContent = "Pendaftaran berhasil!";
+      msg.style.color = "lightgreen";
+      registerForm.reset();
+      setTimeout(() => {
+        toggleForms();
+        msg.textContent = "";
+      }, 1500);
 
     } catch (error) {
       msg.textContent = "Terjadi kesalahan koneksi.";
       msg.style.color = "red";
+      console.error(error);
     }
   });
 </script>
