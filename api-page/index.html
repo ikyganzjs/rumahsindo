@@ -1,4 +1,4 @@
-<!-- Final HTML Gabungan Login + Layout API + Loading Screen Premium -->
+<!-- Final HTML Gabungan Login + Layout API + Loading Screen Premium + Register Form + Simpan ke GitHub -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +20,6 @@
     }
     .no-scroll { overflow: hidden; }
 
-    /* ✅ Loading Screen Premium */
     #loadingScreen {
       position: fixed;
       inset: 0;
@@ -100,61 +99,79 @@
       50% { opacity: 0.6; }
     }
 
-    /* ✅ Container Login & API Layout */
     .container {
-      background-color: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(5px);
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
       border-radius: 16px;
       padding: 30px;
       margin-top: 30px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      color: #fff;
     }
-    #loginForm input {
+    #loginForm input, #registerForm input {
       border-radius: 10px;
       padding: 10px;
       border: 1px solid #ccc;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
     }
+    #registerContainer { display: none; }
+    a { color: #ddd; text-decoration: underline; cursor: pointer; }
   </style>
 </head>
 
-<!-- Popup Pengumuman -->
-<div id="announcementBar" class="alert alert-info text-center mb-0" role="alert" style="position: fixed; top: 0; left: 0; right: 0; z-index: 10000; border-radius: 0;">
-  <strong>Pengumuman:</strong> Website sedang dalam perbaikan.
-  <button type="button" class="btn-close ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
+<div id="loadingScreen">
+  <div class="logo">
+    <img src="/src/icon.png" alt="Logo" />
+  </div>
+  <div id="loadingText">Loading... 0%</div>
+  <div class="progress">
+    <div class="progress-bar" id="loadingBar"></div>
+  </div>
 </div>
 
 <body>
-  <!-- ✅ Loading Screen dengan Logo -->
-  <div id="loadingScreen">
-    <div class="logo">
-      <img src="https://img1.pixhost.to/images/7013/619067548_zakkistore.jpg" alt="Logo">
+<div class="container" id="loginContainer">
+  <h2 class="text-center mb-4">Login ke IkyJs API</h2>
+  <form id="loginForm">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" id="username" class="form-control" required />
     </div>
-    <h2 id="loadingText">Loading... 0%</h2>
-    <div class="progress">
-      <div class="progress-bar" id="loadingBar"></div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" id="password" class="form-control" required />
     </div>
-  </div>
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+  </form>
+  <p class="text-center mt-3">Belum punya akun? <a onclick="toggleForms()">Daftar</a></p>
+</div>
 
-  <!-- ✅ Login -->
-  <div class="container" id="loginContainer">
-    <h2 class="text-center mb-4">Login ke IkyJs API</h2>
-    <form id="loginForm">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" id="username" class="form-control" required />
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" class="form-control" required />
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Login</button>
-    </form>
-    <p class="text-center mt-3">
-      Belum punya akun? <a href="https://wa.me/6283844970586?text=.daftarweb">Daftar via WhatsApp</a>
-    </p>
-  </div>
+<div class="container" id="registerContainer">
+  <h2 class="text-center mb-4">Daftar Akun Baru</h2>
+  <form id="registerForm">
+    <div class="mb-3">
+      <label for="regUsername" class="form-label">Username</label>
+      <input type="text" id="regUsername" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label for="regEmail" class="form-label">Email</label>
+      <input type="email" id="regEmail" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label for="regPassword" class="form-label">Password</label>
+      <input type="password" id="regPassword" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label for="regConfirm" class="form-label">Konfirmasi Password</label>
+      <input type="password" id="regConfirm" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-success w-100">Daftar</button>
+  </form>
+  <p class="text-center mt-3">Sudah punya akun? <a onclick="toggleForms()">Login</a></p>
+</div>
 
-  <!-- ✅ Main Content -->
+<!-- Main Content -->
   <div id="mainContent" style="display: none;">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light">
@@ -219,6 +236,8 @@
       </div>
     </div>
   </div>
+
+  <div id="wm"></div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -318,7 +337,84 @@
           document.getElementById("profileImage").src = 'https://img1.pixhost.to/images/7013/619067548_zakkistore.jpg';
         });
     });
-  </script>
-  <script src="/script.js"></script>
+  
+function toggleForms() {
+  const login = document.getElementById('loginContainer');
+  const register = document.getElementById('registerContainer');
+  login.style.display = login.style.display === 'none' ? 'block' : 'none';
+  register.style.display = register.style.display === 'none' ? 'block' : 'none';
+}
+
+const GITHUB_TOKEN = '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'; // Ganti dengan token kamu
+const GITHUB_OWNER = 'ikyganzjs';
+const GITHUB_REPO = 'mangeakdatabase';
+const GITHUB_FILE_PATH = 'vercel.json';
+
+const registerForm = document.getElementById("registerForm");
+registerForm.addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const username = document.getElementById("regUsername").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const password = document.getElementById("regPassword").value.trim();
+  const confirm = document.getElementById("regConfirm").value.trim();
+
+  if (password !== confirm) {
+    alert("Password tidak cocok!");
+    return;
+  }
+
+  const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
+
+  try {
+    const res = await fetch(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: "application/vnd.github.v3+json"
+      }
+    });
+
+    const result = await res.json();
+    const sha = result.sha;
+    const contentDecoded = atob(result.content);
+    const data = JSON.parse(contentDecoded);
+
+    const usernameExists = data.find(u => u.username === username);
+    if (usernameExists) {
+      alert("Username sudah terdaftar!");
+      return;
+    }
+
+    data.push({ username, email, password });
+
+    const updatedContent = btoa(JSON.stringify(data, null, 2));
+
+    const save = await fetch(apiUrl, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: "application/vnd.github.v3+json"
+      },
+      body: JSON.stringify({
+        message: `Register user ${username}`,
+        content: updatedContent,
+        sha: sha
+      })
+    });
+
+    if (save.ok) {
+      alert("Pendaftaran berhasil!");
+      toggleForms();
+    } else {
+      alert("Gagal menyimpan data ke GitHub.");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Terjadi kesalahan saat koneksi ke GitHub.");
+  }
+});
+</script>
+<script src="/script.js"></script>
 </body>
 </html>
