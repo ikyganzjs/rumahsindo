@@ -167,6 +167,7 @@
       <input type="password" id="regConfirm" class="form-control" required />
     </div>
     <button type="submit" class="btn btn-success w-100">Daftar</button>
+    <div id="registerMessage" class="mt-3 text-center fw-bold"></div>
   </form>
   <p class="text-center mt-3">Sudah punya akun? <a onclick="toggleForms()">Login</a></p>
 </div>
@@ -351,75 +352,54 @@ function toggleForms() {
   }
 }
 
-const GITHUB_TOKEN = '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'; // Ganti dengan token kamu
-const GITHUB_OWNER = 'ikyganzjs';
-const GITHUB_REPO = 'mangeakdatabase';
-const GITHUB_FILE_PATH = 'vercel.json';
-
 const registerForm = document.getElementById("registerForm");
-registerForm.addEventListener("submit", async function(e) {
-  e.preventDefault();
 
-  const username = document.getElementById("regUsername").value.trim();
-  const email = document.getElementById("regEmail").value.trim();
-  const password = document.getElementById("regPassword").value.trim();
-  const confirm = document.getElementById("regConfirm").value.trim();
+  registerForm.addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-  if (password !== confirm) {
-    alert("Password tidak cocok!");
-    return;
-  }
+    const username = document.getElementById("regUsername").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const password = document.getElementById("regPassword").value.trim();
+    const confirm = document.getElementById("regConfirm").value.trim();
+    const msg = document.getElementById("registerMessage");
 
-  const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
-
-  try {
-    const res = await fetch(apiUrl, {
-      headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-        Accept: "application/vnd.github.v3+json"
-      }
-    });
-
-    const result = await res.json();
-    const sha = result.sha;
-    const contentDecoded = atob(result.content);
-    const data = JSON.parse(contentDecoded);
-
-    const usernameExists = data.find(u => u.username === username);
-    if (usernameExists) {
-      alert("Username sudah terdaftar!");
+    if (password !== confirm) {
+      msg.textContent = "Password tidak cocok!";
+      msg.style.color = "red";
       return;
     }
 
-    data.push({ username, email, password });
+    msg.textContent = "Memproses...";
+    msg.style.color = "white";
 
-    const updatedContent = btoa(JSON.stringify(data, null, 2));
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, email, password })
+      });
 
-    const save = await fetch(apiUrl, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-        Accept: "application/vnd.github.v3+json"
-      },
-      body: JSON.stringify({
-        message: `Register user ${username}`,
-        content: updatedContent,
-        sha: sha
-      })
-    });
+      const result = await response.json();
+      msg.textContent = result.message;
 
-    if (save.ok) {
-      alert("Pendaftaran berhasil!");
-      toggleForms();
-    } else {
-      alert("Gagal menyimpan data ke GitHub.");
+      if (response.ok) {
+        msg.style.color = "lightgreen";
+        registerForm.reset();
+        setTimeout(() => {
+          toggleForms();
+          msg.textContent = "";
+        }, 1500);
+      } else {
+        msg.style.color = "orange";
+      }
+
+    } catch (error) {
+      msg.textContent = "Terjadi kesalahan koneksi.";
+      msg.style.color = "red";
     }
-
-  } catch (err) {
-    console.error(err);
-    alert("Terjadi kesalahan saat koneksi ke GitHub.");
-  }
-});
+  });
 </script>
 <script src="/script.js"></script>
 </body>
