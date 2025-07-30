@@ -341,8 +341,14 @@
 function toggleForms() {
   const login = document.getElementById('loginContainer');
   const register = document.getElementById('registerContainer');
-  login.style.display = login.style.display === 'none' ? 'block' : 'none';
-  register.style.display = register.style.display === 'none' ? 'block' : 'none';
+  
+  if (login.style.display !== 'none') {
+    login.style.display = 'none';
+    register.style.display = 'block';
+  } else {
+    login.style.display = 'block';
+    register.style.display = 'none';
+  }
 }
 
 const GITHUB_TOKEN = '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'; // Ganti dengan token kamu
