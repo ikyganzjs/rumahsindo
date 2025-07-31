@@ -123,7 +123,7 @@
     <h2 class="text-center mb-4">Login ke IkyJs API</h2>
     <div class="text-center my-3">
       <div id="g_id_onload"
-           data-client_id="795692294164-udbefttfc36de36p1dhf5o76mkt8ha9i.apps.googleusercontent.com"
+           data-client_id="795692294164-tvig0pefpmodveisegjusv0rdu9vqmr2.apps.googleusercontent.com"
            data-context="signin"
            data-ux_mode="popup"
            data-callback="handleGoogleLogin"
@@ -308,10 +308,8 @@
       localStorage.removeItem('googleUser');
       location.reload();
     }
-
-    // Check if user already logged in
-    document.addEventListener("DOMContentLoaded", () => {
-      const savedUser = localStorage.getItem('googleUser');
+    
+    const savedUser = localStorage.getItem('googleUser');
       if (savedUser) {
         showUser(JSON.parse(savedUser));
       }
