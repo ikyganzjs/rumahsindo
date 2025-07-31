@@ -150,12 +150,17 @@
   </div>
 </div>
 
-  <div class="container text-center" id="mainContent" style="display: none;">
-    <h2>Selamat Datang, <span id="userName"></span>!</h2>
-    <img id="userPic" src="" alt="Foto Profil" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
-    <p id="userEmail"></p>
-    <button class="btn btn-danger" onclick="logout()">Logout</button>
-  </div>
+<!-- Main Content -->
+  <div id="mainContent" style="display: none;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+          <span id="header" class="me-2"></span>
+          <div id="versionHeader" class="px-2 py-1 rounded-pill text-white" style="background-color: rgba(84, 190, 255, 1); font-size: 12px;"></div>
+        </a>
+      </div>
+    </nav>
 
     <!-- Main -->
     <div class="container">
@@ -289,29 +294,14 @@
     });
     
   function handleGoogleLogin(response) {
-      const data = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-      localStorage.setItem('googleUser', JSON.stringify(data));
-      showUser(data);
-    }
-
-    function showUser(data) {
-      document.getElementById("loginContainer").style.display = 'none';
-      document.getElementById("mainContent").style.display = 'block';
-      document.getElementById("userName").textContent = data.name;
-      document.getElementById("userEmail").textContent = data.email;
-      document.getElementById("userPic").src = data.picture;
-    }
-
-    function logout() {
-      localStorage.removeItem('googleUser');
-      location.reload();
-    }
-    
-    const savedUser = localStorage.getItem('googleUser');
-      if (savedUser) {
-        showUser(JSON.parse(savedUser));
-      }
-    });
+    const data = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    console.log("Login Google berhasil:", data);
+    document.getElementById("loginContainer").style.display = 'none';
+    document.getElementById("mainContent").style.display = 'block';
+    document.getElementById("profileImage").src = data.picture;
+    document.getElementById("name").textContent = data.name;
+    document.getElementById("description").textContent = data.email;
+  }
 </script>
 <script src="/script.js"></script>
 </body>
