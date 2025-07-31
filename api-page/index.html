@@ -119,36 +119,33 @@
   </style>
 </head>
 <body>
-<div id="loadingScreen">
-  <div class="logo">
-    <img src="/src/icon.png" alt="Logo" />
-  </div>
-  <div id="loadingText">Loading... 0%</div>
-  <div class="progress">
-    <div class="progress-bar" id="loadingBar"></div>
-  </div>
-</div>
-
 <div class="container" id="loginContainer">
-  <h2 class="text-center mb-4">Login ke IkyJs API</h2>
-  <div class="text-center my-3">
-    <div id="g_id_onload"
-         data-client_id="795692294164-udbefttfc36de36p1dhf5o76mkt8ha9i.apps.googleusercontent.com"
-         data-context="signin"
-         data-ux_mode="popup"
-         data-callback="handleGoogleLogin"
-         data-auto_prompt="false">
-    </div>
-    <div class="g_id_signin"
-         data-type="standard"
-         data-shape="rectangular"
-         data-theme="outline"
-         data-text="signin_with"
-         data-size="large"
-         data-logo_alignment="left">
-    </div>
-  </div>
-</div>
+    <h2 class="text-center mb-4">Login ke IkyJs API</h2>
+    <div class="text-center my-3">
+      <div id="g_id_onload"
+           data-client_id="795692294164-udbefttfc36de36p1dhf5o76mkt8ha9i.apps.googleusercontent.com"
+           data-context="signin"
+           data-ux_mode="popup"
+           data-callback="handleGoogleLogin"
+           data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-shape="rectangular"
+           data-theme="outline"
+           data-text="signin_with"
+           data-size="large"
+           data-logo_alignment="left">
+      </div>
+    </div>
+  </div>
+
+  <div class="container text-center" id="mainContent" style="display: none;">
+    <h2>Selamat Datang, <span id="userName"></span>!</h2>
+    <img id="userPic" src="" alt="Foto Profil" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+    <p id="userEmail"></p>
+    <button class="btn btn-danger" onclick="logout()">Logout</button>
+  </div>
 
 <!-- Main Content -->
   <div id="mainContent" style="display: none;">
@@ -294,14 +291,31 @@
     });
     
   function handleGoogleLogin(response) {
-    const data = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-    console.log("Login Google berhasil:", data);
-    document.getElementById("loginContainer").style.display = 'none';
-    document.getElementById("mainContent").style.display = 'block';
-    document.getElementById("profileImage").src = data.picture;
-    document.getElementById("name").textContent = data.name;
-    document.getElementById("description").textContent = data.email;
-  }
+      const data = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      localStorage.setItem('googleUser', JSON.stringify(data));
+      showUser(data);
+    }
+
+    function showUser(data) {
+      document.getElementById("loginContainer").style.display = 'none';
+      document.getElementById("mainContent").style.display = 'block';
+      document.getElementById("userName").textContent = data.name;
+      document.getElementById("userEmail").textContent = data.email;
+      document.getElementById("userPic").src = data.picture;
+    }
+
+    function logout() {
+      localStorage.removeItem('googleUser');
+      location.reload();
+    }
+
+    // Check if user already logged in
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedUser = localStorage.getItem('googleUser');
+      if (savedUser) {
+        showUser(JSON.parse(savedUser));
+      }
+    });
 </script>
 <script src="/script.js"></script>
 </body>
