@@ -119,26 +119,36 @@
   </style>
 </head>
 <body>
+<div id="loadingScreen">
+  <div class="logo">
+    <img src="/src/icon.png" alt="Logo" />
+  </div>
+  <div id="loadingText">Loading... 0%</div>
+  <div class="progress">
+    <div class="progress-bar" id="loadingBar"></div>
+  </div>
+</div>
+
 <div class="container" id="loginContainer">
-    <h2 class="text-center mb-4">Login ke IkyJs API</h2>
-    <div class="text-center my-3">
-      <div id="g_id_onload"
-           data-client_id="795692294164-tvig0pefpmodveisegjusv0rdu9vqmr2.apps.googleusercontent.com"
-           data-context="signin"
-           data-ux_mode="popup"
-           data-callback="handleGoogleLogin"
-           data-auto_prompt="false">
-      </div>
-      <div class="g_id_signin"
-           data-type="standard"
-           data-shape="rectangular"
-           data-theme="outline"
-           data-text="signin_with"
-           data-size="large"
-           data-logo_alignment="left">
-      </div>
-    </div>
-  </div>
+  <h2 class="text-center mb-4">Login ke IkyJs API</h2>
+  <div class="text-center my-3">
+    <div id="g_id_onload"
+         data-client_id="795692294164-tvig0pefpmodveisegjusv0rdu9vqmr2.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleGoogleLogin"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="outline"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+  </div>
+</div>
 
   <div class="container text-center" id="mainContent" style="display: none;">
     <h2>Selamat Datang, <span id="userName"></span>!</h2>
