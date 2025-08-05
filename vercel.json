@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/login",
+      "destination": "/api-page/index.html"
+    },
+    {
+      "source": "/home",
+      "destination": "/api-page/home.html"
+    }
+  ]
+}
