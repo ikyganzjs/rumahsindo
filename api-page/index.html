@@ -1,0 +1,309 @@
+<!-- Final HTML - Login Hanya Menggunakan Google OAuth -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/src/icon.png" type="image/png">
+  <title id="page">IkyJs Rest Api</title>
+
+  <!-- Google Fonts & Bootstrap -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"/>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://img1.pixhost.to/images/7013/619060458_zakkistore.jpg') center/cover no-repeat fixed;
+      margin: 0;
+      padding: 0;
+    }
+    .no-scroll { overflow: hidden; }
+
+    #loadingScreen {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      transition: opacity 1.5s ease;
+      color: #fff;
+    }
+    .fade-out { opacity: 0; pointer-events: none; }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      animation: fadeRotate 4s infinite linear;
+      margin-bottom: 20px;
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #loadingText {
+      font-size: 24px;
+      margin-bottom: 20px;
+      animation: pulse 1.5s infinite;
+    }
+
+    .progress {
+      width: 220px;
+      height: 10px;
+      border-radius: 50px;
+      overflow: hidden;
+      margin-top: 10px;
+      background-color: rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      position: relative;
+      transition: width 0.3s ease;
+    }
+    .progress-bar::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 50px;
+      background: rgba(255,255,255,0.4);
+      transform: translateX(-50px);
+      animation: shimmer 1.2s infinite;
+    }
+
+    @keyframes fadeRotate {
+      0% { transform: rotate(0deg); opacity: 1; }
+      50% { transform: rotate(180deg); opacity: 0.8; }
+      100% { transform: rotate(360deg); opacity: 1; }
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-50px); }
+      100% { transform: translateX(300px); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      color: #fff;
+    }
+    .g_id_signin {
+      background-color: rgba(255, 255, 255, 0.15) !important;
+      backdrop-filter: blur(8px);
+      border-radius: 12px !important;
+      padding: 8px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+<div id="loadingScreen">
+  <div class="logo">
+    <img src="/src/icon.png" alt="Logo" />
+  </div>
+  <div id="loadingText">Loading... 0%</div>
+  <div class="progress">
+    <div class="progress-bar" id="loadingBar"></div>
+  </div>
+</div>
+
+<div class="container" id="loginContainer">
+  <h2 class="text-center mb-4">Login ke IkyJs API</h2>
+  <div class="text-center my-3">
+    <div id="g_id_onload"
+         data-client_id="795692294164-udbefttfc36de36p1dhf5o76mkt8ha9i.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleGoogleLogin"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="outline"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+  <div id="mainContent" style="display: none;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+          <span id="header" class="me-2"></span>
+          <div id="versionHeader" class="px-2 py-1 rounded-pill text-white" style="background-color: rgba(84, 190, 255, 1); font-size: 12px;"></div>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <div class="container">
+      <div class="d-flex align-items-center mb-3">
+        <h1 id="name" class="me-2"></h1>
+        <div id="version" class="bg-dark text-white px-2 py-1 rounded-pill" style="font-size: 11px;"></div>
+      </div>
+      <p id="description" class="lead mb-3"></p>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-4 text-center">
+          <img id="profileImage" src="" alt="Foto Profil" class="rounded-circle shadow" style="width: 130px; height: 130px; object-fit: cover;" />
+        </div>
+        <div class="col-md-8">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between"><strong>Lokasi</strong><span id="location">Memuat...</span></li>
+            <li class="list-group-item d-flex justify-content-between"><strong>Tanggal & Waktu</strong><span id="datetime">Memuat...</span></li>
+            <li class="list-group-item d-flex justify-content-between"><strong>User Agent</strong><span id="userAgent">Memuat...</span></li>
+            <li class="list-group-item d-flex justify-content-between"><strong>Status Baterai</strong><span id="batteryStatus">Memuat...</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <input type="text" id="searchInput" class="form-control mb-4" placeholder="Search API...">
+      <div id="apiLinks" class="mb-4"></div>
+      <div class="tab-content" id="apiContent"></div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="apiResponseModal" tabindex="-1" aria-labelledby="apiResponseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title" id="apiResponseModalLabel"></h5>
+            <p id="apiResponseModalDesc" class="text-muted mb-0" style="font-size: 14px;"></p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <pre id="apiEndpoint" class="bg-light p-2 rounded"></pre>
+          <div id="apiQueryInputContainer"></div>
+          <div id="apiResponseLoading" class="d-none d-flex justify-content-center align-items-center" style="height: 100px;">
+            <div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
+          </div>
+          <pre id="apiResponseContent" class="d-none mt-2 bg-light p-2 rounded"></pre>
+        </div>
+        <div class="modal-footer">
+          <button id="submitQueryBtn" class="btn btn-dark">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="wm"></div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const loadingScreen = document.getElementById("loadingScreen");
+      const body = document.body;
+      body.classList.add("no-scroll");
+
+      let progress = 0;
+      const progressBar = document.getElementById("loadingBar");
+      const progressText = document.getElementById("loadingText");
+
+      const loadingInterval = setInterval(() => {
+        progress += 1;
+        if (progress <= 100) {
+          progressBar.style.width = `${progress}%`;
+          progressText.textContent = `Loading... ${progress}%`;
+        } else {
+          clearInterval(loadingInterval);
+        }
+      }, 30);
+
+      setTimeout(() => {
+        loadingScreen.classList.add("fade-out");
+        body.classList.remove("no-scroll");
+      }, 3000);
+
+      const updateTime = () => {
+        const now = new Date();
+        const waktu = now.toLocaleTimeString();
+        const tanggal = now.toLocaleDateString('id-ID', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        document.getElementById("datetime").textContent = `${tanggal}, ${waktu}`;
+      };
+      updateTime();
+      setInterval(updateTime, 1000);
+
+      document.getElementById("userAgent").textContent = navigator.userAgent;
+
+      fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("location").textContent = `${data.city}, ${data.region}, ${data.country_name}`;
+        })
+        .catch(() => {
+          document.getElementById("location").textContent = "Gagal memuat lokasi";
+        });
+
+      if (navigator.getBattery) {
+        navigator.getBattery().then(battery => {
+          const updateBattery = () => {
+            const level = Math.round(battery.level * 100);
+            const charging = battery.charging ? "Mengisi" : "Tidak Mengisi";
+            document.getElementById("batteryStatus").textContent = `${level}% - ${charging}`;
+          };
+          updateBattery();
+          battery.addEventListener('levelchange', updateBattery);
+          battery.addEventListener('chargingchange', updateBattery);
+        });
+      } else {
+        document.getElementById("batteryStatus").textContent = "Tidak didukung browser";
+      }
+
+      fetch('/src/settings.json')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("profileImage").src = data.profileImage || 'https://img1.pixhost.to/images/7013/619067548_zakkistore.jpg';
+        })
+        .catch(() => {
+          document.getElementById("profileImage").src = 'https://img1.pixhost.to/images/7013/619067548_zakkistore.jpg';
+        });
+    });
+    
+  function handleGoogleLogin(response) {
+    const data = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    console.log("Login Google berhasil:", data);
+    document.getElementById("loginContainer").style.display = 'none';
+    document.getElementById("mainContent").style.display = 'block';
+    document.getElementById("profileImage").src = data.picture;
+    document.getElementById("name").textContent = data.name;
+    document.getElementById("description").textContent = data.email;
+  }
+</script>
+<script src="/script.js"></script>
+</body>
+</html>
+>
